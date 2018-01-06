@@ -1,0 +1,25 @@
+# Aliases for the anki desktop application from docker image
+#
+# To use these:
+#
+#    1) Copy this file to somewhere (e.g. ~/.bash_aliases_anki).
+#    2) Add the following line to your .bashrc:
+#        source ~/.bash_aliases_anki
+
+alias anki=__anki
+
+__anki() {
+    docker run --rm -ti \
+        -v /etc/passwd:/etc/passwd:ro \
+        -v /etc/group:/etc/group:ro \
+        -v ${HOME}/.local/share/Anki2:/data \
+        -w /data \
+        -e TERM=${TERM} \
+        --group-add audio \
+        --user=`id -u`:`id -g` \
+        --net=host \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix${DISPLAY} \
+        --device /dev/snd \
+        metalguardian/anki
+}
