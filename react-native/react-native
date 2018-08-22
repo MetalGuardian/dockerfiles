@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -e
+
+mkdir -p ${HOME}/.cache/yarn ${HOME}/.gradle ${HOME}/.cache/android
+touch ${HOME}/.yarnrc
+
+WORKING_DIR=$PWD
+
+docker run --rm -ti \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
+    --user=`id -u`:`id -g` \
+    --net=host \
+    --init \
+    --workdir=${WORKING_DIR} \
+    -v ${WORKING_DIR}:${WORKING_DIR} \
+    -v ${HOME}/.cache/yarn:${HOME}/.cache/yarn \
+    -v ${HOME}/.yarnrc:${HOME}/.yarnrc \
+    -v ${HOME}/.gradle:${HOME}/.gradle \
+    -v ${HOME}/.cache/android:/opt/android-sdk-linux/.android \
+    metalguardian/react-native \
+    "$@"
