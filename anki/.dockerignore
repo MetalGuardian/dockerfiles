@@ -1,3 +1,2 @@
-.bash_aliases_anki
-Makefile
-README.md
+.*
+!Dockerfile

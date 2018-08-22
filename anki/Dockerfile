@@ -12,13 +12,10 @@ RUN apt install -yq anki wget mplayer fonts-vlgothic ibus-anthy dbus-x11 x11-xkb
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.1/dumb-init_1.2.1_amd64
-RUN chmod +x /usr/local/bin/dumb-init
-
 RUN mkdir /data
 
 VOLUME ["/data"]
 
-ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
+ENTRYPOINT ["bash", "-c"]
 
-CMD ["bash", "-c", "/usr/bin/ibus-daemon -xd && /usr/bin/anki -b /data"]
+CMD ["/usr/bin/ibus-daemon -xd && /usr/bin/anki -b /data"]
