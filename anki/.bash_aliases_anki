@@ -9,6 +9,7 @@
 alias anki=__anki
 
 __anki() {
+    mkdir -p ~/.local/share/Anki2
     docker run --rm -ti \
         -v /etc/passwd:/etc/passwd:ro \
         -v /etc/group:/etc/group:ro \
