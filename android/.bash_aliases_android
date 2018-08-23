@@ -1,0 +1,34 @@
+# Aliases for the react-native from docker image
+#
+# To use these:
+#
+#    1) Copy this file to somewhere (e.g. ~/.bash_aliases_react_native).
+#    2) Add the following line to your .bashrc:
+#        source ~/.bash_aliases_react_native
+
+alias react-native=__react-native
+
+__react-native() {
+    mkdir -p ${HOME}/.cache/yarn ${HOME}/.gradle ${HOME}/.cache/android
+    touch ${HOME}/.yarnrc
+    COMMAND="bash"
+    if [[ $# -gt 0 ]]; then
+        COMMAND="react-native $@"
+    fi
+    WORKING_DIR=$PWD
+    docker run --rm -ti \
+        -v /etc/passwd:/etc/passwd:ro \
+        -v /etc/group:/etc/group:ro \
+        -e TERM=${TERM} \
+        --user=`id -u`:`id -g` \
+        --net=host \
+        --init \
+        --workdir=${WORKING_DIR} \
+        -v ${WORKING_DIR}:${WORKING_DIR} \
+        -v ${HOME}/.cache/yarn:${HOME}/.cache/yarn \
+        -v ${HOME}/.yarnrc:${HOME}/.yarnrc \
+        -v ${HOME}/.gradle:${HOME}/.gradle \
+        -v ${HOME}/.cache/android:/opt/android-sdk-linux/.android \
+        android-emulator \
+        bash -c "${COMMAND}"
+}

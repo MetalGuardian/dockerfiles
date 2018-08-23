@@ -24,15 +24,24 @@ RUN mkdir -p ${ANDROID_HOME} && \
 
 RUN yes | sdkmanager --licenses
 
-RUN sdkmanager "platform-tools"
-RUN sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}"
-RUN sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}"
-RUN sdkmanager "system-images;android-${ANDROID_COMPILE_SDK};default;x86_64"
-RUN sdkmanager "emulator"
-
 RUN sdkmanager --update
 
-RUN avdmanager create avd -n test -d 8 -k "system-images;android-26;default;x86_64"
+#RUN avdmanager create avd -n test -d 8 -k "system-images;android-26;default;x86_64"
+
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -yq nodejs
+
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update && apt-get install -yq yarn
+
+RUN npm install -g react-native-cli
 
 #CMD ["/opt/android-sdk-linux/emulator/emulator", "-avd", "test", "-gpu off", "-verbose", "-qemu"]
 CMD ["bash"]
+
+RUN sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}"
+RUN sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}"
+RUN sdkmanager "platform-tools"
+#RUN sdkmanager "system-images;android-${ANDROID_COMPILE_SDK};default;x86_64"
+#RUN sdkmanager "emulator"
