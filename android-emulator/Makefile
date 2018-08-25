@@ -21,7 +21,8 @@ run: ## Runs docker container
 		--device /dev/snd \
 		--device /dev/kvm \
 		andoid-emulator \
-		/opt/android-sdk-linux/emulator/emulator -avd test -gpu off
+		bash
+		# /opt/android-sdk-linux/emulator/emulator -avd test -gpu off
 
 create:
 	echo no | avdmanager create avd -n test -d 8 -k "system-images;android-26;default;x86_64"
