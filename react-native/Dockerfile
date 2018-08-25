@@ -14,8 +14,6 @@ RUN apt-get update
 RUN apt-get install -y locales wget unzip
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
 
-#RUN dpkg --add-architecture i386
-
 RUN mkdir -p ${ANDROID_HOME} && \
     cd ${ANDROID_HOME} && \
     wget -q https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip -O android_tools.zip && \
@@ -24,15 +22,21 @@ RUN mkdir -p ${ANDROID_HOME} && \
 
 RUN yes | sdkmanager --licenses
 
-RUN sdkmanager "platform-tools"
-RUN sdkmanager "platforms;android-25"
-RUN sdkmanager "build-tools;25.0.3"
-RUN sdkmanager "system-images;android-25;google_apis_playstore;x86_64"
-RUN sdkmanager "emulator"
-#RUN dpkg --add-architecture i386
 RUN sdkmanager --update
 
-RUN avdmanager create avd -n test -d 8 -k "system-images;android-25;google_apis_playstore;x86_64"
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -yq nodejs
 
-#CMD ["/opt/android-sdk-linux/emulator/emulator", "-avd", "test", "-gpu off", "-verbose", "-qemu"]
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update && apt-get install -yq yarn
+
+RUN npm install -g react-native-cli
+
 CMD ["bash"]
+
+#RUN sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}"
+#RUN sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}"
+RUN sdkmanager "platform-tools"
+RUN sdkmanager "build-tools;25.0.3"
+RUN sdkmanager "platforms;android-25"
