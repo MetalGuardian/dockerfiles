@@ -29,6 +29,6 @@ __react-native() {
         -v ${HOME}/.yarnrc:${HOME}/.yarnrc \
         -v ${HOME}/.gradle:${HOME}/.gradle \
         -v ${HOME}/.cache/android:/opt/android-sdk-linux/.android \
-        android-emulator \
+        react-native \
         bash -c "${COMMAND}"
 }

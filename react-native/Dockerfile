@@ -35,8 +35,8 @@ RUN npm install -g react-native-cli
 
 CMD ["bash"]
 
-#RUN sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}"
-#RUN sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}"
+RUN sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}"
+RUN sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}"
 RUN sdkmanager "platform-tools"
 RUN sdkmanager "build-tools;25.0.3"
 RUN sdkmanager "platforms;android-25"

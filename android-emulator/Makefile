@@ -9,6 +9,7 @@ build: ## Builds docker image
 	docker build -t android-emulator .
 
 run: ## Runs docker container
+	xhost +local:docker; \
 	docker run --rm -ti \
 		-v /etc/passwd:/etc/passwd:ro \
 		-v /etc/group:/etc/group:ro \
@@ -18,10 +19,13 @@ run: ## Runs docker container
 		--init \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=unix${DISPLAY} \
+		-v /tmp/.cache-android:/opt/android-sdk-linux/.android \
 		--device /dev/snd \
 		--device /dev/kvm \
 		android-emulator \
-		/opt/android-sdk-linux/emulator/emulator -avd test -gpu off
+		bash; \
+		# /opt/android-sdk-linux/emulator/emulator -avd test -gpu off; \
+	xhost -local:docker
 
 create:
 	echo no | avdmanager create avd -n test -d 8 -k "system-images;android-26;default;x86_64"

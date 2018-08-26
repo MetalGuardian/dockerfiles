@@ -25,14 +25,13 @@ RUN mkdir -p ${ANDROID_HOME} && \
 RUN yes | sdkmanager --licenses
 
 RUN sdkmanager "platform-tools"
-RUN sdkmanager "platforms;android-25"
-RUN sdkmanager "build-tools;25.0.3"
-RUN sdkmanager "system-images;android-25;google_apis_playstore;x86_64"
+RUN sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}"
+RUN sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}"
+RUN sdkmanager "system-images;android-${ANDROID_COMPILE_SDK};google_apis;x86_64"
 RUN sdkmanager "emulator"
-#RUN dpkg --add-architecture i386
 RUN sdkmanager --update
 
-RUN avdmanager create avd -n test -d 8 -k "system-images;android-25;google_apis_playstore;x86_64"
+RUN avdmanager create avd -n test -d 8 -k "system-images;android-${ANDROID_COMPILE_SDK};google_apis;x86_64"
 
 #CMD ["/opt/android-sdk-linux/emulator/emulator", "-avd", "test", "-gpu off", "-verbose", "-qemu"]
 CMD ["bash"]
