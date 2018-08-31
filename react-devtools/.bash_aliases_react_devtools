@@ -1,0 +1,35 @@
+# Aliases for the react-devtools from docker image
+#
+# To use these:
+#
+#    1) Copy this file to somewhere (e.g. ~/.bash_aliases_react_devtools).
+#    2) Add the following line to your .bashrc:
+#        source ~/.bash_aliases_react_native
+
+alias react-devtools=__react-devtools
+
+__react-devtools() {
+    mkdir -p ${HOME}/.cache/yarn ${HOME}/.config/configstore
+    touch ${HOME}/.yarnrc
+    COMMAND="bash"
+    if [[ $# -gt 0 ]]; then
+        COMMAND="react-devtools $@"
+    fi
+    WORKING_DIR=$PWD
+    docker run --rm -ti \
+        -v /etc/passwd:/etc/passwd:ro \
+        -v /etc/group:/etc/group:ro \
+        -e TERM=${TERM} \
+        --user=`id -u`:`id -g` \
+        --net=host \
+        --init \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -e DISPLAY=unix${DISPLAY} \
+        --workdir=${WORKING_DIR} \
+        -v ${WORKING_DIR}:${WORKING_DIR} \
+        -v ${HOME}/.config/configstore:${HOME}/.config/configstore \
+        -v ${HOME}/.cache/yarn:${HOME}/.cache/yarn \
+        -v ${HOME}/.yarnrc:${HOME}/.yarnrc \
+        react-devtools \
+        bash -c "${COMMAND}"
+}
