@@ -6,7 +6,7 @@ help: ## print help
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' ${MAKEFILE_LIST} | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 build: ## Builds docker image
-	docker build -t ngrok .
+	docker build -t ngrok:local .
 
 run: ## Runs docker container
 	docker run --rm -ti \
@@ -17,4 +17,4 @@ run: ## Runs docker container
 		--net=host \
 		--init \
 		--entrypoint ash \
-		ngrok
+		ngrok:local

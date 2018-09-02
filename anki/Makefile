@@ -8,7 +8,7 @@ help:
 	@echo " run  		Runs docker container"
 
 build:
-	docker build -t anki-application .
+	docker build -t anki:local .
 
 run:
 	docker run --rm -ti \
@@ -23,4 +23,4 @@ run:
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=unix${DISPLAY} \
 		--device /dev/snd \
-		anki-application
+		anki:local

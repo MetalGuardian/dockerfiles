@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -e
+
+mkdir -p ${HOME}/.npm
+touch ${HOME}/.npmrc
+
+docker run --rm -ti \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
+    --user=`id -u`:`id -g` \
+    --net=host \
+    --init \
+    --workdir=${PWD} \
+    -v ${PWD}:${PWD} \
+    -v ${HOME}/.npm:${HOME}/.npm \
+    -v ${HOME}/.npmrc:${HOME}/.npmrc \
+    --entrypoint npm \
+    metalguardian/node \
+    "$@"
