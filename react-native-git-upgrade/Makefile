@@ -6,7 +6,7 @@ help: ## print help
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' ${MAKEFILE_LIST} | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 build: ## Builds docker image
-	docker build -t node:local .
+	docker build -t react-native-git-upgrade:local .
 
 run: ## Runs docker container
 	docker run --rm -ti \
@@ -14,7 +14,6 @@ run: ## Runs docker container
 		-v /etc/group:/etc/group:ro \
 		-e TERM \
 		--user=`id -u`:`id -g` \
-		--net=host \
 		--init \
 		--entrypoint bash \
-		node:local
+		react-native-git-upgrade:local
