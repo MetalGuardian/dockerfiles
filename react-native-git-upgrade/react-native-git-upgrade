@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -e
+
+mkdir -p ${HOME}/.config/configstore
+
+touch \
+    ${HOME}/.babel.json \
+    ${HOME}/.gitconfig \
+    ${HOME}/.config/configstore/update-notifier-npm.json
+
+docker run --rm -ti \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
+    --user=`id -u`:`id -g` \
+    --init \
+    --workdir=${PWD} \
+    -v ${PWD}:${PWD} \
+    -v ${HOME}/.babel.json:${HOME}/.babel.json \
+    -v ${HOME}/.gitconfig:${HOME}/.gitconfig \
+    -v ${HOME}/.config/configstore/update-notifier-npm.json:${HOME}/.config/configstore/update-notifier-npm.json \
+    --entrypoint react-native-git-upgrade \
+    metalguardian/react-native-git-upgrade \
+    "$@"

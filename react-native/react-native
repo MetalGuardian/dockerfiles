@@ -6,7 +6,9 @@ mkdir -p \
     ${HOME}/.cache/yarn \
     ${HOME}/.gradle \
     ${HOME}/.cache/android
-touch ${HOME}/.yarnrc
+touch \
+    ${HOME}/.yarnrc \
+    ${HOME}/.babel.json
 
 WORKING_DIR=$PWD
 
@@ -22,5 +24,6 @@ docker run --rm -ti \
     -v ${HOME}/.yarnrc:${HOME}/.yarnrc \
     -v ${HOME}/.gradle:${HOME}/.gradle \
     -v ${HOME}/.cache/android:/opt/android-sdk-linux/.android \
-    metalguardian/react-native \
+    -v ${HOME}/.babel.json:${HOME}/.babel.json \
+    metalguardian/react-native:${VERSION:-latest} \
     "$@"
