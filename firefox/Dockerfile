@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:bionic
 
 ENV LANG en_US.UTF-8
 ENV XMODIFIERS @im=ibus
@@ -8,6 +8,8 @@ RUN apt-get update
 RUN apt-get install -y locales
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
 
+
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt install -yq wget ibus-anthy dbus-x11 x11-xkb-utils
 
 RUN apt install -yq gnupg
@@ -20,12 +22,16 @@ RUN apt-get update && apt-get -y install firefox
 RUN apt-get install -yq ca-certificates ffmpeg hicolor-icon-theme libasound2 libgl1-mesa-dri libgl1-mesa-glx libpulse0
 
 RUN apt-get install -yq apulse
+RUN apt-get install -yq libcanberra-gtk-module libcanberra-gtk3-module
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN echo 'pref("browser.tabs.remote.autostart", false);' >> /etc/firefox/syspref.js
+RUN echo 'pref("browser.tabs.remote.autostart.2", false);' >> /etc/firefox/syspref.js
 
 RUN mkdir /data
 RUN chmod 777 /data
 
-ENTRYPOINT [ "apulse", "firefox" ]
+#ENTRYPOINT [ "apulse", "firefox" ]
+#ENTRYPOINT [ "firefox" ]
+

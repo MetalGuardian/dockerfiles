@@ -8,21 +8,29 @@ help:
 	@echo " run  		Runs docker container"
 
 build:
-	docker build -t firefox:local .
+	docker build -t gog:local .
 
 run: build
-	# xhost +"local:docker@"
-	mkdir -p /tmp/firefox-home
-	#--device /dev/snd \
+	mkdir -p /my/home/gog
 	docker run --rm -ti \
 		-v /etc/passwd:/etc/passwd:ro \
 		-v /etc/group:/etc/group:ro \
-		-e TERM=${TERM} \
 		--user=`id -u`:`id -g` \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=unix${DISPLAY} \
 		--init \
-		-v /etc/hosts:/etc/hosts:ro \
-		-v /my/firefox-home:${HOME} \
-		--security-opt=seccomp:unconfined \
-		firefox:local bash
+		-v /my/home/gog:${HOME} \
+		--net none \
+		gog:local
+
+shell: build
+	mkdir -p /my/home/gog
+	docker run --rm -ti \
+		-v /etc/passwd:/etc/passwd:ro \
+		-v /etc/group:/etc/group:ro \
+		-e GOPATH=${HOME}/go \
+		--user=`id -u`:`id -g` \
+		--init \
+		-v /my/home/goland:${HOME} \
+		gog:local \
+		bash

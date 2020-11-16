@@ -8,21 +8,26 @@ help:
 	@echo " run  		Runs docker container"
 
 build:
-	docker build -t firefox:local .
+	docker build -t ripme:local .
 
 run: build
-	# xhost +"local:docker@"
-	mkdir -p /tmp/firefox-home
-	#--device /dev/snd \
+	xhost +"local:docker@"
+	mkdir -p /my/ripme-home
+	mkdir -p /my/ripme
 	docker run --rm -ti \
 		-v /etc/passwd:/etc/passwd:ro \
 		-v /etc/group:/etc/group:ro \
 		-e TERM=${TERM} \
-		--user=`id -u`:`id -g` \
+		--group-add audio \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=unix${DISPLAY} \
 		--init \
+		--user=`id -u`:`id -g` \
 		-v /etc/hosts:/etc/hosts:ro \
-		-v /my/firefox-home:${HOME} \
-		--security-opt=seccomp:unconfined \
-		firefox:local bash
+		-v /my/ripme-home:${HOME} \
+		-v /my/ripme:/app/rips \
+		--memory 1gb \
+		--shm-size 50mb \
+		--cpuset-cpus 0 \
+		--net host \
+		ripme:local

@@ -16,5 +16,5 @@ docker run --rm -ti \
     -v ${HOME}/.npm:${HOME}/.npm \
     -v ${HOME}/.npmrc:${HOME}/.npmrc \
     --entrypoint npm \
-    metalguardian/node \
+    node:local \
     "$@"

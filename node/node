@@ -11,5 +11,5 @@ docker run --rm -ti \
     --workdir=${PWD} \
     -v ${PWD}:${PWD} \
     --entrypoint node \
-    metalguardian/node \
+    node:local \
     "$@"

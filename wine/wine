@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -e
+
+mkdir -p /my/home/wine
+docker run --rm -ti \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
+    -e TERM \
+    --group-add audio \
+    --group-add video \
+    --user=`id -u`:`id -g` \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v /my/home/wine:${HOME} \
+    -e DISPLAY=unix${DISPLAY} \
+    --device /dev/snd \
+    --device /dev/dri \
+    --init \
+    -v ${PWD}:${PWD} \
+    --workdir=${PWD} \
+    -v /files/games:/games \
+    -v /store/games:/other-games \
+    --entrypoint bash \
+    --net host \
+    --security-opt=seccomp:unconfined \
+    --cpus=2 \
+    wine:local

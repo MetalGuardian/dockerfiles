@@ -8,21 +8,26 @@ help:
 	@echo " run  		Runs docker container"
 
 build:
-	docker build -t firefox:local .
+	docker build -t java:local .
 
 run: build
-	# xhost +"local:docker@"
-	mkdir -p /tmp/firefox-home
-	#--device /dev/snd \
+	mkdir -p /tmp/java-home
 	docker run --rm -ti \
 		-v /etc/passwd:/etc/passwd:ro \
 		-v /etc/group:/etc/group:ro \
 		-e TERM=${TERM} \
+		--group-add audio \
 		--user=`id -u`:`id -g` \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e DISPLAY=unix${DISPLAY} \
+		--device /dev/snd \
 		--init \
 		-v /etc/hosts:/etc/hosts:ro \
-		-v /my/firefox-home:${HOME} \
-		--security-opt=seccomp:unconfined \
-		firefox:local bash
+		-v /my/java-home:${HOME} \
+		-v ${PWD}:${PWD} \
+		--workdir=${PWD} \
+		--memory 3gb \
+		--shm-size 1gb \
+		--cpuset-cpus 0 \
+		--net host \
+		java:local

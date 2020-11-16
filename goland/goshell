@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+eval $(docker-machine env -u)
+
+mkdir -p /my/home/goland
+
+# it has access to the internet
+docker run --rm -ti \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/group:/etc/group:ro \
+    -e GOPATH=${HOME}/go \
+    --user=`id -u`:`id -g` \
+    --init \
+    -v /my/home/goland:${HOME} \
+    -v ${HOME}/go:${HOME}/go \
+    -v ${PWD}:${PWD} \
+    -w ${PWD} \
+    --security-opt=seccomp:unconfined \
+    --cpus=2 \
+    goland:local \
+    bash

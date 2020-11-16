@@ -22,6 +22,6 @@ docker run --rm -ti \
     -v ${HOME}/.yarnrc:${HOME}/.yarnrc \
     -v ${HOME}/.npmrc:${HOME}/.npmrc \
     -v ${HOME}/.config/yarn:${HOME}/.config/yarn \
-    --entrypoint yarn \
+    --entrypoint create-react-app \
     node:local \
     "$@"

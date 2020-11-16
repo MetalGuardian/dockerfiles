@@ -3,11 +3,15 @@
 set -e
 
 mkdir -p \
+    ${HOME}/.npm \
     ${HOME}/.cache/yarn \
     ${HOME}/.yarn \
-    ${HOME}/.config/yarn
+    ${HOME}/.config/yarn \
+    ${HOME}/.config/gatsby \
+    ${HOME}/.config/configstore
 touch ${HOME}/.yarnrc
 touch ${HOME}/.npmrc
+touch ${HOME}/.config/configstore/update-notifier-gatsby-cli.json
 
 docker run --rm -ti \
     -v /etc/passwd:/etc/passwd:ro \
@@ -22,6 +26,9 @@ docker run --rm -ti \
     -v ${HOME}/.yarnrc:${HOME}/.yarnrc \
     -v ${HOME}/.npmrc:${HOME}/.npmrc \
     -v ${HOME}/.config/yarn:${HOME}/.config/yarn \
-    --entrypoint yarn \
+    -v ${HOME}/.config/gatsby:${HOME}/.config/gatsby \
+    -v ${HOME}/.npm:${HOME}/.npm \
+    -v ${HOME}/.config/configstore/update-notifier-gatsby-cli.json:${HOME}/.config/configstore/update-notifier-gatsby-cli.json \
+    --entrypoint gatsby \
     node:local \
     "$@"

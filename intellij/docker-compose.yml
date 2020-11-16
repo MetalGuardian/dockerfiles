@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  intellij:
+    build:
+      context: .
+      # target: intellij
+    init: true
+    command: tail -f /dev/null
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /my/home/intellij:${HOME}
+      - ${HOME}/intellij:${HOME}/intellij
+    security_opt:
+      - seccomp=unconfined
+    user: ${UID}:${GID}
+    environment:
+      DISPLAY: unix${DISPLAY}
+      SCHEMA_REGISTRY_HOST: "schema-registry:8081"
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.3.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:5.3.1-1
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_OPTS: "-Dzookeeper.sasl.client.canonicalize.hostname=false"
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:5.3.1
+    depends_on:
+      - zookeeper
+      - kafka
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
+
+  # postgres:
+  #   image: postgres:11.8
+  #   environment:
+  #     POSTGRES_PASSWORD: root
+  #     POSTGRES_USER: root

@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+
+  goland:
+    build:
+      context: .
+      target: goland
+    init: true
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /my/home/goland:${HOME}
+      - ${HOME}/go:${HOME}/go
+    net: none
+    security_opt:
+      - seccomp=unconfined
+    # cap_add:
+    #   - SYS_ADMIN
+    # devices:
+    #   - /dev/fuse
+    user: ${UID}:{GID}
+    environment:
+      GOPATH: ${HOME}/go
+      DISPLAY: unix${DISPLAY}
+
+  goshell:
+    build:
+      context: .
+      target: goshell

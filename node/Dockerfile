@@ -1,4 +1,5 @@
-FROM node
+FROM node:alpine
 
-RUN apt update && apt install -y git \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache git
+
+RUN yarn global add gatsby-cli create-react-app
